@@ -22,7 +22,6 @@ namespace Assignment_6
         {
             _dataSource = dataSource;
             InitializeComponent();
-
         }
 
         private void LoadPeople(string filter = null)
