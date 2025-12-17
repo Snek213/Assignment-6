@@ -17,7 +17,7 @@ namespace Assignment_6
     {
 
         private readonly IPersonDataSource _dataSource;
-
+        private BindingList<Person> _bindingList;
         public frmMain(IPersonDataSource dataSource)
         {
             _dataSource = dataSource;
@@ -25,7 +25,20 @@ namespace Assignment_6
 
         }
 
+        private void LoadPeople(string filter = null)
+        {
+            var peopleEnumerable = string.IsNullOrWhiteSpace(filter) ? _dataSource.GetPeople() : _dataSource.GetPeople(filter);
+            if (peopleEnumerable is BindingList<Person> existingBinding)
+            {
+                _bindingList = existingBinding;
+            }
+            else
+            {
+                _bindingList = new BindingList<Person>(peopleEnumerable.ToList());
+            }
 
+            personBindingSource.DataSource = _bindingList;
+        }
 
         private void personBindingSource_CurrentChanged(object sender, EventArgs e)
         {
@@ -107,7 +120,7 @@ namespace Assignment_6
 
         private void txtSearch_TextChanged(object sender, EventArgs e)
         {
-
+            LoadPeople(txtSearch.Text);
         }
 
         private void txtNameBox_TextChanged(object sender, EventArgs e)
